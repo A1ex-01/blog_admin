@@ -7,7 +7,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: '@umijs/max',
+    title: 'Blog Management',
   },
   routes: [
     {
@@ -19,16 +19,14 @@ export default defineConfig({
       path: '/home',
       component: './Home',
     },
+
     {
-      name: '权限演示',
-      path: '/access',
-      component: './Access',
-    },
-    {
-      name: ' CRUD 示例',
-      path: '/table',
-      component: './Table',
+      name: '博客列表',
+      path: '/blog',
+      component: './post/list/index',
     },
   ],
+
   npmClient: 'pnpm',
+  tailwindcss: {},
 });
