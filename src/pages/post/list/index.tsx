@@ -5,7 +5,7 @@ import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Flex, Tag } from 'antd';
 import confirm from 'antd/es/modal/confirm';
 import React, { useRef } from 'react';
-
+import toast, { Toaster } from 'react-hot-toast';
 const TableList: React.FC<unknown> = () => {
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<IPost>[] = [
@@ -66,35 +66,42 @@ const TableList: React.FC<unknown> = () => {
   ];
 
   return (
-    <ProTable
-      headerTitle="查询表格"
-      actionRef={actionRef}
-      search={false}
-      toolBarRender={() => [
-        <Button key="1" type="primary">
-          新建
-        </Button>,
-      ]}
-      pagination={{
-        pageSize: 10,
-      }}
-      request={async (params: ICP) => {
-        const {
-          success,
-          data: { list, total },
-        } = await getBlogs({
-          ...params,
-        });
-
-        return {
-          data: list || [],
-          total,
-          success,
-          // total,
-        };
-      }}
-      columns={columns}
-    />
+    <>
+      <ProTable
+        headerTitle="查询表格"
+        actionRef={actionRef}
+        search={false}
+        toolBarRender={() => [
+          <Button key="1" type="primary">
+            新建
+          </Button>,
+        ]}
+        pagination={{
+          pageSize: 10,
+        }}
+        request={async (params: ICP) => {
+          const toastId = toast.loading('获取列表中');
+          const {
+            success,
+            data: { list, total },
+          } = await getBlogs({
+            ...params,
+          });
+          if (success) {
+            toast.success('获取列表成功');
+          }
+          toast.dismiss(toastId);
+          return {
+            data: list || [],
+            total,
+            success,
+            // total,
+          };
+        }}
+        columns={columns}
+      />
+      <Toaster />
+    </>
   );
 };
 
