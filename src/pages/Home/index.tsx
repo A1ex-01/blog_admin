@@ -8,7 +8,7 @@ const HomePage: React.FC = () => {
   return (
     <PageContainer ghost>
       <div className={styles.container}>
-        <Guide name={user!.nickname!} />
+        <Guide name={user?.nickname as string} />
       </div>
     </PageContainer>
   );
