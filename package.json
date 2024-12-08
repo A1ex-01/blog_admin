@@ -2,8 +2,8 @@
   "private": true,
   "author": "a1ex <peterxhhx@gmail.com>",
   "scripts": {
-    "build": "cross-env UMI_ENV=prod max build",
-    "dev": "cross-env UMI_ENV=dev max dev",
+    "build": "max build",
+    "dev": "max dev",
     "format": "prettier --cache --write .",
     "postinstall": "max setup",
     "prepare": "husky",
