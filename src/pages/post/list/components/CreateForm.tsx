@@ -1,26 +1,23 @@
-import { Modal } from 'antd';
-import React, { PropsWithChildren } from 'react';
+import { getFormCenterProps } from '@/utils';
+import { ModalForm, ProFormText } from '@ant-design/pro-components';
+import { useForm } from 'antd/es/form/Form';
 
 interface CreateFormProps {
-  modalVisible: boolean;
-  onCancel: () => void;
+  title: string;
+  trigger: React.ReactElement;
 }
 
-const CreateForm: React.FC<PropsWithChildren<CreateFormProps>> = (props) => {
-  const { modalVisible, onCancel } = props;
-
+export default function CreateForm(props: CreateFormProps) {
+  const { title, trigger } = props;
+  const [form] = useForm();
   return (
-    <Modal
-      destroyOnClose
-      title="新建"
-      width={420}
-      open={modalVisible}
-      onCancel={() => onCancel()}
-      footer={null}
+    <ModalForm
+      {...getFormCenterProps('horizontal')}
+      title={title}
+      trigger={trigger}
+      form={form}
     >
-      {props.children}
-    </Modal>
+      <ProFormText name="title" label="标题" />
+    </ModalForm>
   );
-};
-
-export default CreateForm;
+}

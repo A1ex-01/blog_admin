@@ -18,6 +18,9 @@ export interface IPost {
   notion_page_id: string;
   userDetail: UserDetail;
   notion: Notion;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
 }
 export interface Notion {
   pageId: string;
@@ -46,4 +49,9 @@ export interface UserDetail {
   avatar: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ILogin {
+  username: string;
+  password: string;
 }

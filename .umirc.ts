@@ -6,24 +6,40 @@ export default defineConfig({
   model: {},
   initialState: {},
   request: {},
-  layout: {
-    title: 'Blog Management',
-  },
+  layout: false,
   routes: [
     {
       path: '/',
-      redirect: '/home',
-    },
-    {
-      name: '首页',
-      path: '/home',
-      component: './Home',
-    },
+      component: '@/layout/BlankLayout',
 
-    {
-      name: '博客列表',
-      path: '/blog',
-      component: './post/list/index',
+      routes: [
+        {
+          path: '/login',
+          component: './login/index',
+          menuRender: false,
+        },
+        {
+          path: '/',
+          component: '@/layout/BasicLayout',
+          routes: [
+            {
+              path: '/',
+              redirect: '/home',
+            },
+            {
+              name: '首页',
+              path: '/home',
+              component: './Home',
+            },
+
+            {
+              name: '博客列表',
+              path: '/blog',
+              component: './post/list/index',
+            },
+          ],
+        },
+      ],
     },
   ],
 

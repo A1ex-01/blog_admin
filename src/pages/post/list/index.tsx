@@ -1,11 +1,14 @@
 import { BlogSite } from '@/constants';
-import { getBlogs } from '@/services/blog';
+import { getBlogs, updatePostByUuid } from '@/services/blog';
+import useCommonStore from '@/store/useCommonStore';
 import { ICP, IPost } from '@/types';
+import { handleUpdate } from '@/utils/apiAction';
+import { EditFilled } from '@ant-design/icons';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Flex, Modal, Tag } from 'antd';
-import React, { useRef } from 'react';
+import { Button, Flex, Tag } from 'antd';
+import React, { useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import Markdown from 'react-markdown';
+import UpdateForm from './components/UpdateForm';
 const TableList: React.FC<unknown> = () => {
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<IPost>[] = [
@@ -36,6 +39,11 @@ const TableList: React.FC<unknown> = () => {
       },
     },
     {
+      title: '发布时间',
+      dataIndex: 'publishedAt',
+      valueType: 'dateTime',
+    },
+    {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
@@ -49,23 +57,29 @@ const TableList: React.FC<unknown> = () => {
           >
             链接
           </a>
-          <Button
-            type="primary"
-            icon={false}
-            onClick={() => {
-              Modal.confirm({
-                content: <Markdown>{record?.notion?.content}</Markdown>,
-                icon: null,
-              });
+          <UpdateForm
+            title="编辑"
+            formVals={record}
+            onSubmit={async (formVals) => {
+              const res = await handleUpdate(
+                updatePostByUuid(record.id, formVals),
+              );
+              console.log('🚀 ~ onSubmit={async ~ res:', res);
+              if (res.success) {
+                actionRef.current?.reload();
+              }
+              return res.success;
             }}
-          >
-            详情
-          </Button>
+            trigger={<Button type="link" icon={<EditFilled />} />}
+          />
         </div>
       ),
     },
   ];
-
+  const { getNotionPages } = useCommonStore();
+  useEffect(() => {
+    getNotionPages();
+  }, []);
   return (
     <>
       <ProTable
@@ -78,7 +92,7 @@ const TableList: React.FC<unknown> = () => {
           </Button>,
         ]}
         pagination={{
-          pageSize: 10,
+          pageSize: 2,
         }}
         request={async (params: ICP) => {
           const toastId = toast.loading('获取列表中');

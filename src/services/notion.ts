@@ -1,6 +1,6 @@
-import { ICP, IListRes, IPost } from '@/types';
+import { INotionPage } from '@/types/notion';
 import request from '.';
 
-export const getNotionPagesById = (id: string, params: ICP) => {
-  return request.get<IListRes<IPost>>(`/notion/${id}`, params);
+export const getNotionPagesById = (id: string) => {
+  return request.get<INotionPage[]>(`/notion/${id}`, {});
 };
