@@ -82,9 +82,8 @@ class Request {
     });
   }
 }
-const baseUrl =
-  process.env.NODE_ENV === 'production'
-    ? 'http://106.54.215.126:8004'
-    : 'http://localhost:8004';
+const baseUrl = 'https://api.a1ex.vip';
+
+// const baseUrl = 'http://localhost:8004';
 const request = new Request(baseUrl);
 export default request;
