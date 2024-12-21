@@ -22,7 +22,7 @@ export default () => {
     <ProConfigProvider hashed={false}>
       <div className=" flex justify-center items-center">
         <LoginForm<ILogin>
-          logo="http://a1ex.vip/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.96443187.png&w=64&q=75"
+          logo="http://a1ex.club/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.96443187.png&w=64&q=75"
           title="Blog Management"
           subTitle="Blog Management"
           onFinish={async (values) => {
