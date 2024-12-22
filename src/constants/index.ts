@@ -9,7 +9,7 @@ export const codeMessage: Record<errorCodeEnum, string> = {
   [errorCodeEnum.SYSTEMERROR]: 'System Error',
   [errorCodeEnum.UNAUTHORIZED]: 'Unauthorized',
 };
-export const BlogSite = 'http://a1ex.vip';
+export const BlogSite = 'http://a1ex.club';
 export function getCodeMessage(code: errorCodeEnum) {
   return codeMessage[code];
 }

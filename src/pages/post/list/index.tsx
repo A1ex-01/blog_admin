@@ -92,7 +92,7 @@ const TableList: React.FC<unknown> = () => {
           </Button>,
         ]}
         pagination={{
-          pageSize: 2,
+          pageSize: 10,
         }}
         request={async (params: ICP) => {
           const toastId = toast.loading('获取列表中');
