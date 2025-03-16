@@ -1,3 +1,6 @@
+import { ProColumns } from '@ant-design/pro-components';
+import { NamePath } from 'antd/es/form/interface';
+
 export interface ICP {
   current: number;
   pageSize: number;
@@ -14,25 +17,31 @@ export interface IListRes<T = any> extends ICP {
 export interface IPost {
   id: string;
   user_id: string;
-  deletedAt: null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: any;
+  publishedAt: string;
   notion_page_id: string;
   userDetail: UserDetail;
-  notion: Notion;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
+  notionDetail: INotionDetail;
 }
-export interface Notion {
-  pageId: string;
-  cover: string;
+export interface INotionDetail {
+  page_id: string;
   title: string;
-  createdAt: string;
-  updatedAt: string;
-  tags: Tag[];
-  category: Tag;
+  cover_url: string;
   content: string;
+  created_at: string;
+  updated_at: string;
+  category?: ICategory;
+  tags?: ITag[];
 }
-export interface Tag {
+
+export interface ITag {
+  id: string;
+  name: string;
+  color: string;
+}
+export interface ICategory {
   id: string;
   name: string;
   color: string;
@@ -55,3 +64,9 @@ export interface ILogin {
   username: string;
   password: string;
 }
+
+interface ProColumnsExtendedField<T> {
+  dataIndex?: NamePath<T>;
+}
+export type ExtendedProColumns<T> = Omit<ProColumns<T>, 'dataIndex'> &
+  ProColumnsExtendedField<T>;

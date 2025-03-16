@@ -16,6 +16,7 @@ export default function NotionPageSelect({ name }: NotionPageSelectProps) {
         key: i.id,
         value: i.id.replaceAll('-', ''),
       }))}
+      showSearch
       rules={[{ required: true, message: '请选择Notion页面' }]}
     />
   );

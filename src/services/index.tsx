@@ -82,7 +82,7 @@ class Request {
     });
   }
 }
-const baseUrl = 'https://api.a1ex.club';
+const baseUrl = 'http://106.54.215.126:8004';
 
 // const baseUrl = 'http://localhost:8004';
 const request = new Request(baseUrl);
