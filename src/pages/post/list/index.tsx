@@ -1,37 +1,51 @@
+import FoldBox from '@/components/FoldBox';
 import { BlogSite } from '@/constants';
-import { getBlogs, updatePostByUuid } from '@/services/blog';
+import {
+  addPost,
+  getBlogs,
+  syncBlogs,
+  updatePostByUuid,
+} from '@/services/blog';
 import useCommonStore from '@/store/useCommonStore';
-import { ICP, IPost } from '@/types';
-import { handleUpdate } from '@/utils/apiAction';
+import { ExtendedProColumns, ICP, IPost } from '@/types';
+import { handleAdd, handleUpdate } from '@/utils/apiAction';
 import { EditFilled } from '@ant-design/icons';
-import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { ActionType, ProTable } from '@ant-design/pro-components';
 import { Button, Flex, Tag } from 'antd';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import UpdateForm from './components/UpdateForm';
+import ActionModalForm from './components/ActionModalForm';
 const TableList: React.FC<unknown> = () => {
   const actionRef = useRef<ActionType>();
-  const columns: ProColumns<IPost>[] = [
+  const columns: ExtendedProColumns<IPost>[] = [
     {
       title: '名称',
-      dataIndex: ['notion', 'title'],
+      dataIndex: ['notionDetail', 'title'],
+    },
+    {
+      title: '内容',
+      dataIndex: ['notionDetail', 'content'],
+      width: 300,
+      render(_) {
+        return <FoldBox rows={4}>{_}</FoldBox>;
+      },
     },
     {
       title: '分类',
-      dataIndex: ['notion', 'category'],
+      dataIndex: ['notionDetail', 'category'],
 
       render(data, record) {
-        if (!record?.notion?.category?.id) return null;
-        return <Tag color="cyan">{record?.notion?.category?.name}</Tag>;
+        if (!record?.notionDetail?.category?.id) return null;
+        return <Tag color="cyan">{record?.notionDetail?.category?.name}</Tag>;
       },
     },
     {
       title: '标签',
-      dataIndex: ['notion', 'tags'],
+      dataIndex: ['notionDetail', 'tags'],
       render(data, record) {
         return (
           <Flex>
-            {record?.notion?.tags?.map((item) => (
+            {record?.notionDetail?.tags?.map((item) => (
               <Tag key={item?.id}>{item?.name}</Tag>
             ))}
           </Flex>
@@ -45,26 +59,25 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '操作',
-      dataIndex: 'option',
-      valueType: 'option',
+      fixed: 'right',
+      width: 130,
       render: (_, record) => (
         <div className="flex items-center gap-4">
           <a
             rel="noreferrer"
-            className=""
+            className="text-primary"
             target="_blank"
             href={`${BlogSite}/post/${record?.notion_page_id}`}
           >
             链接
           </a>
-          <UpdateForm
+          <ActionModalForm
             title="编辑"
             formVals={record}
             onSubmit={async (formVals) => {
               const res = await handleUpdate(
                 updatePostByUuid(record.id, formVals),
               );
-              console.log('🚀 ~ onSubmit={async ~ res:', res);
               if (res.success) {
                 actionRef.current?.reload();
               }
@@ -80,16 +93,42 @@ const TableList: React.FC<unknown> = () => {
   useEffect(() => {
     getNotionPages();
   }, []);
+  const [syncing, setSyncing] = useState(false);
   return (
     <>
       <ProTable
-        headerTitle="查询表格"
+        headerTitle="博客列表"
         actionRef={actionRef}
         search={false}
         toolBarRender={() => [
-          <Button key="1" type="primary">
-            新建
+          <Button
+            loading={syncing}
+            type="link"
+            key={'syncBlog'}
+            onClick={async () => {
+              setSyncing(true);
+              const res = await handleUpdate(syncBlogs());
+              setSyncing(false);
+              if (res.success) {
+                actionRef.current?.reload();
+              }
+            }}
+          >
+            同步所有notion博客到DB
           </Button>,
+          <ActionModalForm
+            title="新建"
+            key="add"
+            formVals={{}}
+            trigger={<Button type="primary">新建</Button>}
+            onSubmit={async (formVals) => {
+              const res = await handleAdd(addPost(formVals));
+              if (res.success) {
+                actionRef.current?.reload();
+              }
+              return res.success;
+            }}
+          />,
         ]}
         pagination={{
           pageSize: 10,
@@ -114,6 +153,9 @@ const TableList: React.FC<unknown> = () => {
           };
         }}
         columns={columns}
+        scroll={{
+          x: 1400,
+        }}
       />
       <Toaster />
     </>

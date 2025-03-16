@@ -7,13 +7,12 @@ import { useForm } from 'antd/es/form/Form';
 interface UpdateFormProps {
   title: string;
   trigger: React.ReactElement;
-  formVals: IPost;
-  onSubmit: (values: IPost) => Promise<void>;
+  formVals: Partial<IPost>;
+  onSubmit: (values: Partial<IPost>) => Promise<void>;
 }
 
 export default function UpdateForm(props: UpdateFormProps) {
   const { title, trigger, formVals, onSubmit } = props;
-  console.log('🚀 ~ UpdateForm ~ formVals:', formVals);
   const [form] = useForm();
   return (
     <ModalForm<IPost>
